@@ -44,4 +44,33 @@ Saat menggunakan strategi Recreate, sistem akan menghentikan seluruh pod versi l
 
 Di sisi lain, Rolling Update mengadopsi pendekatan bertahap yang menjaga ketersediaan aplikasi. Dengan metode ini, pod-pod baru dihadirkan secara bergantian sambil tetap mempertahankan pod versi lama yang masih aktif. Pendekatan ini memastikan aplikasi tetap dapat diakses oleh pengguna selama proses pembaruan, sehingga menghindari terjadinya downtime.
 
-4. 
+##  Reflection on Rolling Update & Kubernetes Manifest File
+
+1. What is the difference between Rolling Update and Recreate deployment strategy?
+
+Strategi Rolling Update dan Recreate Deployment di Kubernetes memiliki perbedaan mendasar dalam hal ketersediaan aplikasi saat pembaruan berlangsung.
+
+Ketika mengimplementasikan Recreate Deployment, terjadi periode nonaktif karena seluruh pod versi sebelumnya dimatikan terlebih dahulu sebelum meluncurkan pod dengan versi baru. Hal ini mengakibatkan layanan tidak dapat diakses sementara waktu selama proses pembaruan.
+
+Sementara itu, Rolling Update menawarkan pendekatan yang lebih mulus dengan menghindari downtime. Strategi ini menerapkan pembaruan secara bertahap dimana pod-pod baru dibuat satu demi satu sambil mempertahankan pod lama tetap berfungsi. Dengan metode ini, aplikasi tetap dapat melayani permintaan tanpa gangguan sepanjang proses pembaruan berlangsung.
+
+2. Try deploying the Spring Petclinic REST using Recreate deployment strategy and document your attempt.
+
+![deploy](img/deploying.png)
+![deploy](img/deploying1.png)
+
+Akses endpoint /petclinic
+
+![petclinic](img/petclinic.png)
+
+3. Prepare different manifest files for executing Recreate deployment strategy.
+
+Pada bagian sebelumnya, saya telah melakukan serangkaian proses dengan memanfaatkan berkas manifes yang saya namai deployment_recreate.yaml. Untuk membuat berkas tersebut, saya melakukan modifikasi terhadap berkas deployment.yaml yang sudah ada sebelumnya, dengan perubahan utama pada bagian strategi pembaruan dari RollingUpdate menjadi Recreate.
+```kubernetes
+   strategy:
+     type: Recreate
+```
+
+4. What do you think are the benefits of using Kubernetes manifest files? Recall your experience in deploying the app manually and compare it to your experience when deploying the same app by applying the manifest files (i.e., invoking kubectl apply -f command) to the cluster.
+
+Berdasarkan pengamatan saya, implementasi berkas manifes memberikan keunggulan signifikan berupa minimalisasi potensi kesalahan yang dilakukan oleh developer ketika menjalankan proses deployment aplikasi. Tahapan-tahapan deployment secara terstruktur telah terdokumentasi dengan baik dalam berkas manifes tersebut. Dengan pendekatan ini, pengelolaan konfigurasi aplikasi ke depannya tidak perlu lagi dilaksanakan secara manual, sehingga meningkatkan efisiensi dan konsistensi dalam lingkungan pengembangan.
